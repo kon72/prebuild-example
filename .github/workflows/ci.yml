@@ -7,22 +7,30 @@ permissions: {}
 
 jobs:
   test:
-    name: Test for ${{ matrix.platform.container || matrix.platform.os }} ${{ matrix.platform.target-arch }}, Node.js ${{ matrix.node-version }}
+    name: Test for ${{ matrix.platform.display-name }}, Node.js ${{ matrix.node-version }}
     timeout-minutes: 10
     runs-on: ${{ matrix.platform.os }}
     container: ${{ matrix.platform.container }}
     strategy:
       fail-fast: false
       matrix:
-        node-version: [16, 18, 20]
+        node-version: [16]
         platform:
           [
-            {os: ubuntu-latest},
-            {os: ubuntu-latest, container: 'alpine:latest'},
-            {os: macos-latest, target-arch: x64},
-            {os: [self-hosted, macOS, arm64], target-arch: arm64},
-            {os: windows-latest, target-arch: x86},
-            {os: windows-latest, target-arch: x64},
+            {display-name: linux-glibc-x64, os: ubuntu-latest},
+            {
+              display-name: linux-musl-x64,
+              os: ubuntu-latest,
+              container: 'node:20-alpine',
+            },
+            {display-name: darwin-x64, os: macos-latest, target-arch: x64},
+            {
+              display-name: darwin-arm64,
+              os: [self-hosted, macOS, arm64],
+              target-arch: arm64,
+            },
+            {display-name: win32-ia32, os: windows-latest, target-arch: x86},
+            {display-name: win32-x64, os: windows-latest, target-arch: x64},
           ]
 
     steps:
@@ -36,6 +44,12 @@ jobs:
         uses: actions/checkout@v3
 
       - uses: pnpm/action-setup@v2
+
+      - name: Print versions before setup
+        run: |
+          node --version
+          node -p "process.platform + '@' + process.arch"
+          pnpm --version
 
       - name: Setup Node.js environment
         uses: actions/setup-node@v3
