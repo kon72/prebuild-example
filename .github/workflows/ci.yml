@@ -21,7 +21,7 @@ jobs:
             {
               display-name: linux-musl-x64,
               os: ubuntu-latest,
-              container: 'node:20-alpine',
+              container: 'node:alpine',
             },
             {display-name: darwin-x64, os: macos-latest, target-arch: x64},
             {
@@ -34,6 +34,10 @@ jobs:
           ]
 
     steps:
+      - name: Dependencies (Linux musl)
+        if: contains(matrix.platform.container, 'alpine')
+        run: apk add python3 --update-cache
+
       - name: Set git to use LF line endings
         if: contains(matrix.platform.os, 'windows')
         run: |
