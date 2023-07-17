@@ -7,9 +7,9 @@ permissions: {}
 
 jobs:
   test:
-    name: Test for ${{ matrix.container || matrix.os }} ${{ matrix.target-arch }}, Node.js ${{ matrix.node-version }}
+    name: Test for ${{ matrix.container || matrix.platform.os }} ${{ matrix.platform.target-arch }}, Node.js ${{ matrix.node-version }}
     timeout-minutes: 10
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.platform.os }}
     container: ${{ matrix.container }}
     strategy:
       fail-fast: false
