@@ -17,11 +17,10 @@ jobs:
         node-version: [16, 18, 20]
         platform:
           [
-            {display-name: linux-glibc-x64, os: ubuntu-latest},
             {
-              display-name: linux-musl-x64,
+              display-name: linux-glibc-x64,
               os: ubuntu-latest,
-              container: 'node:alpine',
+              target-arch: x64,
             },
             {display-name: darwin-x64, os: macos-latest, target-arch: x64},
             {
@@ -31,23 +30,20 @@ jobs:
             },
             {display-name: win32-ia32, os: windows-latest, target-arch: x86},
             {display-name: win32-x64, os: windows-latest, target-arch: x64},
-            {display-name: win32-arm64, os: windows-latest, target-arch: arm64},
           ]
-        exclude:
-          - node-version: 16
-            platform:
-              - {
-                  display-name: win32-arm64,
-                  os: windows-latest,
-                  target-arch: arm64,
-                }
-          - node-version: 18
-            platform:
-              - {
-                  display-name: win32-arm64,
-                  os: windows-latest,
-                  target-arch: arm64,
-                }
+        include:
+          - display-name: linux-musl-x64
+            os: ubuntu-latest
+            container: 'node:16-alpine'
+            node-version: 16
+          - display-name: linux-musl-x64
+            os: ubuntu-latest
+            container: 'node:18-alpine'
+            node-version: 18
+          - display-name: linux-musl-x64
+            os: ubuntu-latest
+            container: 'node:20-alpine'
+            node-version: 20
 
     steps:
       - name: Dependencies (Linux musl)
