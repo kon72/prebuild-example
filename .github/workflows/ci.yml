@@ -7,10 +7,10 @@ permissions: {}
 
 jobs:
   test:
-    name: Test for ${{ matrix.container || matrix.platform.os }} ${{ matrix.platform.target-arch }}, Node.js ${{ matrix.node-version }}
+    name: Test for ${{ matrix.platform.container || matrix.platform.os }} ${{ matrix.platform.target-arch }}, Node.js ${{ matrix.node-version }}
     timeout-minutes: 10
     runs-on: ${{ matrix.platform.os }}
-    container: ${{ matrix.container }}
+    container: ${{ matrix.platform.container }}
     strategy:
       fail-fast: false
       matrix:
@@ -20,7 +20,7 @@ jobs:
             {os: ubuntu-latest},
             {os: ubuntu-latest, container: 'alpine:latest'},
             {os: macos-latest, target-arch: x64},
-            {os: macos-latest, target-arch: arm64},
+            {os: [self-hosted, macOS, arm64], target-arch: arm64},
             {os: windows-latest, target-arch: x86},
             {os: windows-latest, target-arch: x64},
           ]
