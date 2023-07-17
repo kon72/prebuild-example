@@ -10,7 +10,7 @@
     "build": "tsup",
     "test": "jest",
     "prebuild": "prebuild --runtime napi --all --force --strip --verbose",
-    "install": "prebuild-install --runtime napi --all --verbose || node-gyp rebuild",
+    "install": "prebuild-install --runtime napi --all --verbose || echo \"Failed to download the prebuilt binary.\"",
     "format:gyp": "yapf -i --style \"{based_on_style: google, column_limit: 80, indent_width: 2, continuation_indent_width: 2, allow_split_before_dict_value: false}\" binding.gyp"
   },
   "dependencies": {

@@ -1,25 +1,36 @@
-name: test
+name: CI
 on:
-  push:
-    branches: [main]
-  pull_request:
+  - push
+  - pull_request
 
 permissions: {}
 
 jobs:
   test:
-    name: Test
+    name: Test for ${{ matrix.container || matrix.os }} ${{ matrix.target-arch }}, Node.js ${{ matrix.node-version }}
     timeout-minutes: 10
     runs-on: ${{ matrix.os }}
+    container: ${{ matrix.container }}
     strategy:
       fail-fast: false
       matrix:
-        node-version: [16.x, 18.x, 20.x]
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [16, 18, 20]
+        include:
+          - os: ubuntu-latest
+          - os: ubuntu-latest
+            container: alpine:latest
+          - os: macos-latest
+            target-arch: x64
+          - os: macos-latest
+            target-arch: arm64
+          - os: windows-latest
+            target-arch: x86
+          - os: windows-latest
+            target-arch: x64
 
     steps:
       - name: Set git to use LF line endings
-        if: matrix.os == 'windows-latest'
+        if: contains(matrix.os, 'windows')
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
@@ -33,18 +44,23 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+          architecture: ${{ matrix.target-arch }}
           cache: 'pnpm'
 
       - name: Print versions
         run: |
           node --version
           pnpm --version
+          node -p "process.platform + '@' + process.arch"
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Format
         run: pnpm format:check
+
+      - name: Prebuild
+        run: pnpm -r prebuild
 
       - name: Build
         run: pnpm -r build
