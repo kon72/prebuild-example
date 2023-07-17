@@ -15,22 +15,19 @@ jobs:
       fail-fast: false
       matrix:
         node-version: [16, 18, 20]
-        include:
-          - os: ubuntu-latest
-          - os: ubuntu-latest
-            container: alpine:latest
-          - os: macos-latest
-            target-arch: x64
-          - os: macos-latest
-            target-arch: arm64
-          - os: windows-latest
-            target-arch: x86
-          - os: windows-latest
-            target-arch: x64
+        platform:
+          [
+            {os: ubuntu-latest},
+            {os: ubuntu-latest, container: alpine:latest},
+            {os: macos-latest, target-arch: x64},
+            {os: macos-latest, target-arch: arm64},
+            {os: windows-latest, target-arch: x86},
+            {os: windows-latest, target-arch: x64},
+          ]
 
     steps:
       - name: Set git to use LF line endings
-        if: contains(matrix.os, 'windows')
+        if: contains(matrix.platform.os, 'windows')
         run: |
           git config --global core.autocrlf false
           git config --global core.eol lf
@@ -44,7 +41,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          architecture: ${{ matrix.target-arch }}
+          architecture: ${{ matrix.platform.target-arch }}
           cache: 'pnpm'
 
       - name: Print versions
