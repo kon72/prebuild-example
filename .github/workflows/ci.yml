@@ -31,12 +31,13 @@ jobs:
             },
             {display-name: win32-ia32, os: windows-latest, target-arch: x86},
             {display-name: win32-x64, os: windows-latest, target-arch: x64},
+            {display-name: win32-arm64, os: windows-latest, target-arch: arm64},
           ]
 
     steps:
       - name: Dependencies (Linux musl)
         if: contains(matrix.platform.container, 'alpine')
-        run: apk add python3 --update-cache
+        run: apk add build-base python3 --update-cache
 
       - name: Set git to use LF line endings
         if: contains(matrix.platform.os, 'windows')
