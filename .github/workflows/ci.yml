@@ -9,6 +9,8 @@ jobs:
   prebuild:
     name: Prebuild for ${{ matrix.display-name }}
     if: startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
     timeout-minutes: 10
     runs-on: ${{ matrix.os }}
     container: ${{ matrix.container }}
