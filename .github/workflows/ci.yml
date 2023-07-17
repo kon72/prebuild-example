@@ -18,7 +18,7 @@ jobs:
         platform:
           [
             {os: ubuntu-latest},
-            {os: ubuntu-latest, container: alpine:latest},
+            {os: ubuntu-latest, container: 'alpine:latest'},
             {os: macos-latest, target-arch: x64},
             {os: macos-latest, target-arch: arm64},
             {os: windows-latest, target-arch: x86},
