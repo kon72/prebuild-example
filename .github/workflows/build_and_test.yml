@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [16, 18, 20]
+        node-version: [18] # [16, 18, 20]
         platform:
           [
             {display-name: linux-glibc-x64, os: ubuntu-20.04, target-arch: x64},
@@ -49,13 +49,10 @@ jobs:
     steps:
       - name: Dependencies (Linux musl)
         if: contains(matrix.platform.container, 'alpine')
-        run: apk add build-base python3 --update-cache
+        run: apk add build-base git python3 --update-cache
 
-      - name: Set git to use LF line endings
-        if: contains(matrix.platform.os, 'windows')
-        run: |
+      - run: |
           git config --global core.autocrlf false
-          git config --global core.eol lf
 
       - name: Checkout
         uses: actions/checkout@v3
